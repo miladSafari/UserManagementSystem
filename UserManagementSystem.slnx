@@ -1,6 +1,8 @@
 <Solution>
   <Project Path="UserManagementService.gRPCService/UserManagementService.gRPCService.csproj" />
+  <Project Path="UserManagementSystem.Common/UserManagementSystem.Common.csproj" Id="0f5c3109-d34c-4fc5-b702-0dc346774efa" />
   <Project Path="UserManagementSystem.Domain/UserManagementSystem.Domain.csproj" />
+  <Project Path="UserManagementSystem.Infrastructure/UserManagementSystem.Infrastructure.csproj" Id="6a0b6db2-7f24-4326-95d7-af89fa048b3a" />
   <Project Path="UserManagementSystem.Service/UserManagementSystem.Service.csproj" />
   <Project Path="UserManagementSystem.Tests/UserManagementSystem.Tests.csproj" Id="ae90f423-3bcb-43c5-afd5-d8646671fe19" />
 </Solution>

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
 
-namespace UserManagementSystem.Domain
+namespace UserManagementSystem.Domain.Entities
 {
     public class User
     {
@@ -10,6 +10,7 @@ namespace UserManagementSystem.Domain
         public string Family { get; private set; }
         public string NationalCode { get; private set; }
         public DateTime BirthDate { get; private set; }
+        public bool IsDeleted { get; private set; }
         private User()
         {
             Name = null!;
@@ -21,16 +22,13 @@ namespace UserManagementSystem.Domain
             if (id == Guid.Empty)
                 throw new ArgumentException("User Id must be greater than zero", nameof(id));
 
-            string[] formats = { "MM/dd/yyyy", "M/d/yyyy", "M/dd/yyyy", "MM/d/yyyy" };
-            if (!DateTime.TryParseExact(DateTime.Now.ToString("MM/dd/yyyy"), formats, new CultureInfo("en-US"),
-                                        DateTimeStyles.None, out birthDate))
-                throw new ArgumentException("User BirthDate is in another format.");
+
 
             Id = id;
             Name = ValidateUserName(name);
             Family = ValidateUserFamily(family);
             NationalCode = ValidateUserNationalCode(nationalCode);
-            BirthDate = birthDate;
+            BirthDate = ValidateUserBirthDate(birthDate);
         }
         public void ChangeName(string newName)
         {
@@ -43,6 +41,10 @@ namespace UserManagementSystem.Domain
         public void ChangeNationalCode(string newNationalCode)
         {
             NationalCode = ValidateUserNationalCode(newNationalCode);
+        }
+        public void ChangeBirthDate(DateTime newBirthDate)
+        {
+            BirthDate = ValidateUserBirthDate(newBirthDate);
         }
         public static string ValidateUserName(string name)
         {
@@ -91,6 +93,19 @@ namespace UserManagementSystem.Domain
 
             return nationalCode;
 
+        }
+        public static DateTime ValidateUserBirthDate(DateTime birthDate)
+        {
+            string[] formats = { "MM/dd/yyyy", "M/d/yyyy", "M/dd/yyyy", "MM/d/yyyy" };
+            if (!DateTime.TryParseExact(DateTime.Now.ToString("MM/dd/yyyy"), formats, new CultureInfo("en-US"),
+                                        DateTimeStyles.None, out birthDate))
+                throw new ArgumentException("User BirthDate is in another format.");
+
+            return birthDate;
+        }
+        public void DeleteUser()
+        {
+            IsDeleted = true;
         }
     }
 }

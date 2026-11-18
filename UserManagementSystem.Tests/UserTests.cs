@@ -1,5 +1,5 @@
 ﻿using System.Xml.Linq;
-using UserManagementSystem.Domain;
+using UserManagementSystem.Domain.Entities;
 
 namespace UserManagementSystem.Tests
 {
@@ -95,6 +95,5 @@ namespace UserManagementSystem.Tests
             //Assert
             Assert.Equal("0016525508", user.NationalCode);
         }
-        //Trim
     }
 }
