@@ -3,7 +3,7 @@ using UserManagementSystem.Domain;
 
 namespace UserManagementSystem.Tests
 {
-    public class UnitTest1
+    public class UserTests
     {
         [Fact]
         public void User_Constructor_Should_be_Create_Correctly()
