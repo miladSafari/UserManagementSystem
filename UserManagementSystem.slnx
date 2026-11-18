@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="UserManagementService.gRPCService/UserManagementService.gRPCService.csproj" />
+  <Project Path="UserManagementSystem.Domain/UserManagementSystem.Domain.csproj" />
+  <Project Path="UserManagementSystem.Service/UserManagementSystem.Service.csproj" />
+  <Project Path="UserManagementSystem.Tests/UserManagementSystem.Tests.csproj" Id="ae90f423-3bcb-43c5-afd5-d8646671fe19" />
+</Solution>
