@@ -15,7 +15,7 @@ namespace UserManagementService.gRPCService.Services
         private readonly IUserService _userService;
         private readonly ILogger<UserGrpcService> _logger;
 
-        private const string DateFormat = "O"; // ISO 8601 RoundTrip
+        private const string DateFormat = "O";
 
         public UserGrpcService(
             IUserService userService,
