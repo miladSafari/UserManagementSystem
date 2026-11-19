@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
+using UserManagementSystem.Common.Enums;
 
 namespace UserManagementSystem.Domain.Entities
 {
@@ -20,7 +21,7 @@ namespace UserManagementSystem.Domain.Entities
         public User(Guid id, string name, string family, string nationalCode, DateTime birthDate)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("User Id must be greater than zero", nameof(id));
+                throw new ArgumentException("User Id must be greater than zero.");
 
 
 
@@ -49,14 +50,12 @@ namespace UserManagementSystem.Domain.Entities
         public static string ValidateUserName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("User name is required.", nameof(name));
+                throw new ArgumentException("User name is required.");
 
             name = name.Trim();
 
             if (name.Length > 50)
                 throw new ArgumentOutOfRangeException(
-                    nameof(name),
-                    name.Length,
                     "User name cannot More than 50 characters.");
 
             return name;
@@ -65,14 +64,12 @@ namespace UserManagementSystem.Domain.Entities
         public static string ValidateUserFamily(string family)
         {
             if (string.IsNullOrWhiteSpace(family))
-                throw new ArgumentException("User family is required.", nameof(family));
+                throw new ArgumentException("User family is required.");
 
             family = family.Trim();
 
             if (family.Length > 70)
                 throw new ArgumentOutOfRangeException(
-                    nameof(family),
-                    family.Length,
                     "User family cannot more than 50 characters.");
 
             return family;
@@ -81,14 +78,16 @@ namespace UserManagementSystem.Domain.Entities
         public static string ValidateUserNationalCode(string nationalCode)
         {
             if (string.IsNullOrWhiteSpace(nationalCode))
-                throw new ArgumentException("User nationalCode is required.", nameof(nationalCode));
+                throw new ArgumentException("User nationalCode is required.");
+
+            if(!NationalCodeValidator.IsValid(nationalCode))
+                throw new ArgumentException("User nationalCode is Invlaid.");
+
 
             nationalCode = nationalCode.Trim();
 
             if (nationalCode.Length != 10)
                 throw new ArgumentOutOfRangeException(
-                    nameof(nationalCode),
-                    nationalCode.Length,
                     "User nationalCode must be 10 characters.");
 
             return nationalCode;
@@ -106,6 +105,32 @@ namespace UserManagementSystem.Domain.Entities
         public void DeleteUser()
         {
             IsDeleted = true;
+        }
+        public static class NationalCodeValidator
+        {
+            public static bool IsValid(string? nationalCode)
+            {
+                if (string.IsNullOrWhiteSpace(nationalCode))
+                    return false;
+
+                if (nationalCode.Length != 10 || !nationalCode.All(char.IsDigit))
+                    return false;
+
+                if (nationalCode.Distinct().Count() == 1)
+                    return false;
+
+                var sum = 0;
+                for (var i = 0; i < 9; i++)
+                {
+                    sum += (nationalCode[i] - '0') * (10 - i);
+                }
+
+                var remainder = sum % 11;
+                var checkDigit = nationalCode[9] - '0';
+
+                return (remainder < 2 && checkDigit == remainder)
+                    || (remainder >= 2 && checkDigit == 11 - remainder);
+            }
         }
     }
 }

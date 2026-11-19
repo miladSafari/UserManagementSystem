@@ -25,7 +25,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
         {
             try
             {
-                var users = await _context.Users.Where(u=>u.IsDeleted == false)
+                var users = await _context.Users.Where(u => u.IsDeleted == false)
                 .Skip((paginationModel.PageNumber - 1) * paginationModel.PageSize)
                 .Take(paginationModel.PageSize).ToListAsync();
 
@@ -42,16 +42,20 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             {
                 LogIntoFile.LogIntoFileMethos("GetAll User Has Error : " + ex.Message);
 
+                string faMessage = GetFaErrorIfExists(ex);
+
                 var result = new MessageResult<List<User>>
                 {
                     Result = null,
-                    Message = "فراخوانی لیست کاربران با خطا مواجه شد",
+                    Message = !string.IsNullOrWhiteSpace(faMessage) ? faMessage : "فراخوانی لیست کاربران با خطا مواجه شد",
                     Status = StatusResult.Error
                 };
                 return result;
             }
 
         }
+
+
         public async Task<MessageResult<User>> GetByIdAsync(UserGetByIdInputDto userGetByIdInputDto)
         {
             try
@@ -71,10 +75,13 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             {
                 LogIntoFile.LogIntoFileMethos($"Get User By Id With Name :{userGetByIdInputDto.Id} Has Error : " + ex.Message);
 
+                string faMessage = GetFaErrorIfExists(ex);
+
+
                 var result = new MessageResult<User>
                 {
                     Result = null,
-                    Message = "فراخوانی کاربر مورد نظر با خطا مواجه شد",
+                    Message = !string.IsNullOrWhiteSpace(faMessage) ? faMessage : "فراخوانی کاربر مورد نظر با خطا مواجه شد",
                     Status = StatusResult.Error
                 };
                 return result;
@@ -105,10 +112,13 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             {
                 LogIntoFile.LogIntoFileMethos($"Update User With Name :{userCreateInputDto.Name} Has Error : " + ex.Message);
 
+                string faMessage = GetFaErrorIfExists(ex);
+
+
                 return new MessageResult<bool>
                 {
                     Result = false,
-                    Message = "ایجاد کاربر با خطا مواجه شد.",
+                    Message = !string.IsNullOrWhiteSpace(faMessage) ? faMessage : "ایجاد کاربر با خطا مواجه شد.",
                     Status = StatusResult.Error
                 };
             }
@@ -150,11 +160,12 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             {
                 LogIntoFile.LogIntoFileMethos($"Update User With Id :{userUpdateInputDto.Id} Has Error : " + ex.Message);
 
+                string faMessage = GetFaErrorIfExists(ex);
 
                 return new MessageResult<bool>
                 {
                     Result = false,
-                    Message = "ویرایش کاربر با خطا مواجه شد.",
+                    Message = !string.IsNullOrWhiteSpace(faMessage) ? faMessage : "ویرایش کاربر با خطا مواجه شد.",
                     Status = StatusResult.Error
                 };
             }
@@ -192,14 +203,29 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             {
                 LogIntoFile.LogIntoFileMethos($"Delete User With Id :{userGetByIdInputDto.Id} Has Error : " + ex.Message);
 
+                string faMessage = GetFaErrorIfExists(ex);
+
                 return new MessageResult<bool>
                 {
                     Result = false,
-                    Message = "حذف کاربر با خطا مواجه شد.",
+                    Message = !string.IsNullOrWhiteSpace(faMessage) ? faMessage : "حذف کاربر با خطا مواجه شد.",
                     Status = StatusResult.Error
                 };
             }
 
+        }
+
+
+        private static string GetFaErrorIfExists(Exception ex)
+        {
+            var faMessage = "";
+            var errorType = ErrorOldEnMessage.Get(ex.Message);
+            if (errorType >= 0)
+            {
+                faMessage = ErrorMessages.Get(errorType);
+            }
+
+            return faMessage;
         }
     }
 }
