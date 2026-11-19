@@ -1,8 +1,6 @@
 ﻿using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
-using UserManagementSystem.Common.Enums;
 using UserManagementSystem.Domain.Common;
-using UserManagementSystem.Domain.Dtos;
 using UserManagementSystem.Domain.Interfaces.Services.Users;
 
 namespace UserManagementService.gRPCService.Controllers
@@ -20,9 +18,8 @@ namespace UserManagementService.gRPCService.Controllers
             _logger = logger;
         }
 
-        // GET: api/User/GetAllAsync
         [HttpGet("GetAllAsync")]
-        public async Task<MessageResult<List<UserGetAllOutputDto>>> GetAllAsync(
+        public async Task<MessageResult<List<UserManagementSystem.Domain.Dtos.UserGetAllOutputDto>>> GetAllAsync(
             [FromQuery] PaginationModel paginationModel)
         {
             var pagination = new UserManagementSystem.Common.Pagination.PaginationModel
@@ -33,24 +30,23 @@ namespace UserManagementService.gRPCService.Controllers
 
             var users = await _userService.GetAllAsync(pagination);
 
-            return new MessageResult<List<UserGetAllOutputDto>>
+            return new MessageResult<List<UserManagementSystem.Domain.Dtos.UserGetAllOutputDto>>
             {
-                Result = users.Result?.Select(u => new UserGetAllOutputDto
+                Result = users.Result?.Select(u => new UserManagementSystem.Domain.Dtos.UserGetAllOutputDto
                 {
                     Id = u.Id,
                     Name = u.Name,
                     Family = u.Family,
                     NationalCode = u.NationalCode,
                     BirthDate = u.BirthDate
-                }).ToList() ?? new List<UserGetAllOutputDto>(),
+                }).ToList() ?? new List<UserManagementSystem.Domain.Dtos.UserGetAllOutputDto>(),
                 Message = users.Message ?? string.Empty,
                 Status = users.Status
             };
         }
 
-        // GET: api/User/GetByIdAsync?id=GUID
         [HttpGet("GetByIdAsync")]
-        public async Task<MessageResult<UserGetAllOutputDto>> GetByIdAsync(Guid id)
+        public async Task<MessageResult<UserManagementSystem.Domain.Dtos.UserGetAllOutputDto>> GetByIdAsync(Guid id)
         {
             var input = new UserManagementSystem.Domain.Dtos.UserGetByIdInputDto { Id = id };
 
@@ -58,7 +54,7 @@ namespace UserManagementService.gRPCService.Controllers
 
             if (user.Result == null)
             {
-                return new MessageResult<UserGetAllOutputDto>
+                return new MessageResult<UserManagementSystem.Domain.Dtos.UserGetAllOutputDto>
                 {
                     Result = null!,
                     Message = user.Message ?? "User not found",
@@ -66,9 +62,9 @@ namespace UserManagementService.gRPCService.Controllers
                 };
             }
 
-            return new MessageResult<UserGetAllOutputDto>
+            return new MessageResult<UserManagementSystem.Domain.Dtos.UserGetAllOutputDto>
             {
-                Result = new UserGetAllOutputDto
+                Result = new UserManagementSystem.Domain.Dtos.UserGetAllOutputDto
                 {
                     Id = user.Result.Id,
                     Name = user.Result.Name,
@@ -81,7 +77,6 @@ namespace UserManagementService.gRPCService.Controllers
             };
         }
 
-        // POST: api/User/CreateAsync
         [HttpPost("CreateAsync")]
         public async Task<MessageResult<bool>> CreateAsync(UserManagementSystem.Domain.Dtos.UserCreateInputDto dto)
         {
@@ -97,7 +92,6 @@ namespace UserManagementService.gRPCService.Controllers
             };
         }
 
-        // POST: api/User/UpdateAsync
         [HttpPost("UpdateAsync")]
         public async Task<MessageResult<bool>> UpdateAsync(UserManagementSystem.Domain.Dtos.UserUpdateInputDto dto)
         {
@@ -111,7 +105,6 @@ namespace UserManagementService.gRPCService.Controllers
             };
         }
 
-        // POST: api/User/DeleteAsync
         [HttpPost("DeleteAsync")]
         public async Task<MessageResult<bool>> DeleteAsync(UserManagementSystem.Domain.Dtos.UserGetByIdInputDto dto)
         {
@@ -124,8 +117,49 @@ namespace UserManagementService.gRPCService.Controllers
                 Status = result.Status
             };
         }
-        [HttpPost("TestGrpcCreate")]
-        public async Task<IActionResult> TestGrpcCreate()
+        [HttpPost("GrpcGetAll")]
+        public async Task<IActionResult> GrpcGetAll(PaginationModel inputDto)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001",
+                new GrpcChannelOptions { HttpHandler = handler });
+            var client = new UserManagementService.gRPCService.UserService.UserServiceClient(channel);
+
+            var response = await client.GetAllAsync(
+                new PaginationModel
+                {
+                    PageNumber = inputDto.PageNumber,
+                    PageSize = inputDto.PageSize
+                });
+
+            return Ok(response);
+        }
+        [HttpPost("GrpcGetById")]
+        public async Task<IActionResult> GrpcGetById(UserManagementService.gRPCService.UserGetByIdInputDto inputDto)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001",
+                new GrpcChannelOptions { HttpHandler = handler });
+            var client = new UserManagementService.gRPCService.UserService.UserServiceClient(channel);
+
+            var response = await client.GetByIdAsync(
+                new UserGetByIdInputDto
+                {
+                    Id = inputDto.Id
+                });
+
+            return Ok(response);
+        }
+        [HttpPost("GrpcCreate")]
+        public async Task<IActionResult> GrpcCreate(UserManagementService.gRPCService.UserCreateInputDto inputDto)
         {
             var handler = new HttpClientHandler
             {
@@ -137,12 +171,56 @@ namespace UserManagementService.gRPCService.Controllers
             var client = new UserManagementService.gRPCService.UserService.UserServiceClient(channel);
 
             var response = await client.CreateAsync(
-                new UserManagementService.gRPCService.UserCreateInputDto
+                new UserCreateInputDto
                 {
-                    Name = "Test",
-                    Family = "Test",
-                    NationalCode = "1234567890",
-                    BirthDate = "1990-01-01T00:00:00.0000000"
+                    Name = inputDto.Name,
+                    Family = inputDto.Family,
+                    NationalCode = inputDto.NationalCode,
+                    BirthDate = inputDto.BirthDate
+                });
+
+            return Ok(response);
+        }
+        [HttpPost("GrpcUpdate")]
+        public async Task<IActionResult> GrpcUpdate(UserManagementService.gRPCService.UserUpdateInputDto inputDto)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001",
+                new GrpcChannelOptions { HttpHandler = handler });
+            var client = new UserManagementService.gRPCService.UserService.UserServiceClient(channel);
+
+            var response = await client.UpdateAsync(
+                new UserUpdateInputDto
+                {
+                    Id = inputDto.Id,
+                    Name = inputDto.Name,
+                    Family = inputDto.Family,
+                    NationalCode = inputDto.NationalCode,
+                    BirthDate = inputDto.BirthDate
+                });
+
+            return Ok(response);
+        }
+        [HttpPost("GrpcDelete")]
+        public async Task<IActionResult> GrpcDelete(UserManagementService.gRPCService.UserGetByIdInputDto inputDto)
+        {
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001",
+                new GrpcChannelOptions { HttpHandler = handler });
+            var client = new UserManagementService.gRPCService.UserService.UserServiceClient(channel);
+
+            var response = await client.DeleteAsync(
+                new UserManagementService.gRPCService.UserGetByIdInputDto
+                {
+                    Id = inputDto.Id
                 });
 
             return Ok(response);

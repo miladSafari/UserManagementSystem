@@ -25,7 +25,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
         {
             try
             {
-                var users = await _context.Users
+                var users = await _context.Users.Where(u=>u.IsDeleted == false)
                 .Skip((paginationModel.PageNumber - 1) * paginationModel.PageSize)
                 .Take(paginationModel.PageSize).ToListAsync();
 

@@ -25,7 +25,6 @@ namespace UserManagementService.gRPCService.Services
             _logger = logger;
         }
 
-        // ---------------- GET ALL ----------------
         public override async Task<UserGetAllOutputDtos> GetAll(
             PaginationModel request,
             ServerCallContext context)
@@ -64,7 +63,6 @@ namespace UserManagementService.gRPCService.Services
             return response;
         }
 
-        // ---------------- GET BY ID ----------------
         public override async Task<UserGetByIdResponse> GetById(
             UserGetByIdInputDto request,
             ServerCallContext context)
@@ -101,7 +99,6 @@ namespace UserManagementService.gRPCService.Services
             return response;
         }
 
-        // ---------------- CREATE ----------------
         public override async Task<OperationResponse> Create(
             UserCreateInputDto request,
             ServerCallContext context)
@@ -129,7 +126,6 @@ namespace UserManagementService.gRPCService.Services
             return MapToOperationResponse(result);
         }
 
-        // ---------------- UPDATE ----------------
         public override async Task<OperationResponse> Update(
             UserUpdateInputDto request,
             ServerCallContext context)
@@ -157,7 +153,6 @@ namespace UserManagementService.gRPCService.Services
             return MapToOperationResponse(result);
         }
 
-        // ---------------- DELETE ----------------
         public override async Task<OperationResponse> Delete(
             UserGetByIdInputDto request,
             ServerCallContext context)
@@ -180,7 +175,6 @@ namespace UserManagementService.gRPCService.Services
             return MapToOperationResponse(result);
         }
 
-        // ---------------- Helpers ----------------
         private static Guid ParseGuidOrThrow(string raw, string fieldName)
         {
             if (!Guid.TryParse(raw, out var id))
