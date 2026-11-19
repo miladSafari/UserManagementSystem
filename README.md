@@ -18,11 +18,6 @@ https://stackoverflow.com/questions/20185015/how-to-write-log-file-in-c
 
 https://stackoverflow.com/questions/63899398/how-do-i-convert-from-google-protobuf-wellknowntypes-timestamp-to-system-datet
 
-و قطعه کد زیر:
-<ItemGroup>
-  <Protobuf Include="Protos\UserService.proto"
-            GrpcServices="Both" />
-</ItemGroup>
 
 راهنمایی برای اجرای پروژه :
 1- پروژه را روی https (Kestrel) اجرا کرده و در browser ، لینک زیر را جایگذاری می کنیم:
