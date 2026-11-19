@@ -1,0 +1,66 @@
+
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "UserManagementService.gRPCService";
+
+package usermanagement;
+
+service UserService {
+  rpc GetAll (PaginationModel) returns (UserGetAllOutputDtos);
+  rpc GetById (UserGetByIdInputDto) returns (UserGetByIdResponse);
+  rpc Create (UserCreateInputDto) returns (OperationResponse);
+  rpc Update (UserUpdateInputDto) returns (OperationResponse);
+  rpc Delete (UserGetByIdInputDto) returns (OperationResponse);
+}
+
+message PaginationModel {
+  int32 pageSize = 1;
+  int32 pageNumber = 2;
+}
+
+message UserGetAllOutputDtos {
+  repeated UserDto users = 1;
+  string message = 2;
+  int32 status = 3;
+}
+
+message UserDto {
+  string id = 1;
+  string name = 2;
+  string family = 3;
+  string nationalCode = 4;
+  string birthDate = 5;
+}
+
+message UserGetByIdInputDto {
+  string id = 1;
+}
+
+message UserGetByIdResponse {
+  UserDto user = 1;
+  string message = 2;
+  int32 status = 3;
+}
+
+message UserCreateInputDto {
+  string name = 1;
+  string family = 2;
+  string nationalCode = 3;
+  string birthDate = 4;
+}
+
+message UserUpdateInputDto {
+  string id = 1;
+  string name = 2;
+  string family = 3;
+  string nationalCode = 4;
+  string birthDate = 5;
+}
+
+message OperationResponse {
+  bool result = 1;
+  string message = 2;
+  int32 status = 3;
+}

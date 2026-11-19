@@ -1,19 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace UserManagementSystem.Common.Logging
 {
     public static class LogIntoFile
     {
+        private static readonly object _lock = new();
+        private static readonly string _logPath =
+            Path.Combine(AppContext.BaseDirectory, "logs", "app.log");
+
         public static void LogIntoFileMethos(string message)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("log something");
+            try
+            {
+                var dir = Path.GetDirectoryName(_logPath)!;
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
 
-            File.AppendAllText(Environment.SystemDirectory + "log.txt", sb.ToString());
-            sb.Clear();
+                var line = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {message}{Environment.NewLine}";
+
+                lock (_lock) 
+                {
+                    File.AppendAllText(_logPath, line);
+                }
+            }
+            catch
+            {
+            }
         }
-
     }
 }

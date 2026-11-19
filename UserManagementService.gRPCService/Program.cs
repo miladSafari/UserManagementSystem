@@ -1,14 +1,42 @@
+using Microsoft.EntityFrameworkCore;
 using UserManagementService.gRPCService.Services;
+using UserManagementSystem.Domain.Interfaces.Repositories.Users;
+using UserManagementSystem.Domain.Interfaces.Services.Users;
+using UserManagementSystem.Infrastructure.Data;
+using UserManagementSystem.Infrastructure.Repositories.Users;
+using UserManagementSystem.Service.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<UserManagementContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("UserManagementConnection"));
+});
+
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddGrpc();
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.MapGrpcService<GreeterService>();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.MapControllers();                       
+
+app.MapGrpcService<UserGrpcService>();     
+
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.Run();

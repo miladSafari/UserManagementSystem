@@ -21,7 +21,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             _context = context;
         }
 
-        public async Task<MessageResult<List<User>>> GetAll(PaginationModel paginationModel)
+        public async Task<MessageResult<List<User>>> GetAllAsync(PaginationModel paginationModel)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             }
 
         }
-        public async Task<MessageResult<User>> GetById(UserGetByIdInputDto userGetByIdInputDto)
+        public async Task<MessageResult<User>> GetByIdAsync(UserGetByIdInputDto userGetByIdInputDto)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             }
 
         }
-        public async Task<MessageResult<bool>> Create(UserCreateInputDto userCreateInputDto)
+        public async Task<MessageResult<bool>> CreateAsync(UserCreateInputDto userCreateInputDto)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             }
 
         }
-        public async Task<MessageResult<bool>> Update(UserUpdateInputDto userUpdateInputDto)
+        public async Task<MessageResult<bool>> UpdateAsync(UserUpdateInputDto userUpdateInputDto)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
                 };
             }
         }
-        public async Task<MessageResult<bool>> Delete(UserGetByIdInputDto userGetByIdInputDto)
+        public async Task<MessageResult<bool>> DeleteAsync(UserGetByIdInputDto userGetByIdInputDto)
         {
             try
             {
