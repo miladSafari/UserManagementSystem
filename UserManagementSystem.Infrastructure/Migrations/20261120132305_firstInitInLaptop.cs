@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UserManagementSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class firstInit : Migration
+    public partial class firstInitInLaptop : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

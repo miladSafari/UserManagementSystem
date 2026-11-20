@@ -14,6 +14,8 @@ public static class ErrorOldEnMessage
         [ErrorType.NationalCodeLenghtIsInvalid] = "User nationalCode must be 10 characters.",
         [ErrorType.NationalCodeIsInvalid] = "User nationalCode is Invlaid.",
         [ErrorType.BirthDateIsInvalid] = "User BirthDate is in another format.",
+        [ErrorType.PageNumberIsInvalid] = "Page number in invalid input.",
+        [ErrorType.PageSizeIsInvalid] = "Page size in invalid input.",
     };
 
     public static ErrorType Get(string message)

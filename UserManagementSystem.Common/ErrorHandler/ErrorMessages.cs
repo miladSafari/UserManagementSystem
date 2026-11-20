@@ -15,6 +15,8 @@ public static class ErrorMessages
         [ErrorType.NationalCodeLenghtIsInvalid] = "کدملی باید 10 کاراکتر باشد.",
         [ErrorType.NationalCodeIsInvalid] = "کد ملی معتبر نیست.",
         [ErrorType.BirthDateIsInvalid] = "تاریخ تولد معتبر نیست.",
+        [ErrorType.PageNumberIsInvalid] = "شماره صفحه نامعتبر است.",
+        [ErrorType.PageSizeIsInvalid] = "اندازه صفحه نامعتبر است.",
     };
 
     public static string Get(ErrorType type)

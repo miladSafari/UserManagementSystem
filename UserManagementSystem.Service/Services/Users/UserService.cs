@@ -4,6 +4,7 @@ using System.Text;
 using UserManagementSystem.Common.Pagination;
 using UserManagementSystem.Domain.Common;
 using UserManagementSystem.Domain.Dtos;
+using UserManagementSystem.Domain.Entities;
 using UserManagementSystem.Domain.Interfaces.Repositories.Users;
 using UserManagementSystem.Domain.Interfaces.Services.Users;
 
@@ -22,6 +23,13 @@ namespace UserManagementSystem.Service.Services.Users
         {
             var finalResult = new MessageResult<List<UserGetAllOutputDto>>();
             var users = await _repository.GetAllAsync(paginationModel);
+
+            if(users.Result == null)
+            {
+                finalResult.Message = users.Message;
+                finalResult.Status = users.Status;
+                return finalResult;
+            }
 
             var resultOfUser = users.Result.Select(u => new UserGetAllOutputDto()
             {
@@ -43,6 +51,14 @@ namespace UserManagementSystem.Service.Services.Users
         {
             var finalResult = new MessageResult<UserGetAllOutputDto>();
             var user = await _repository.GetByIdAsync(userGetByIdInputDto);
+
+
+            if (user.Result == null)
+            {
+                finalResult.Message = user.Message;
+                finalResult.Status = user.Status;
+                return finalResult;
+            }
 
             var resultOfUser = new UserGetAllOutputDto
             {

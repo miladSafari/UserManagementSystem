@@ -12,6 +12,8 @@
         NationalCodeIsRequired = 7,
         NationalCodeLenghtIsInvalid = 8,
         BirthDateIsInvalid = 9,
-        NationalCodeIsInvalid = 10
+        NationalCodeIsInvalid = 10,
+        PageNumberIsInvalid = 11,
+        PageSizeIsInvalid = 12,
     }
 }

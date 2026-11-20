@@ -25,6 +25,12 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
         {
             try
             {
+                if (paginationModel.PageNumber <= 0)
+                    throw new ArgumentException("Page number in invalid input.");
+
+                if (paginationModel.PageSize <= 0)
+                    throw new ArgumentException("Page size in invalid input.");
+
                 var users = await _context.Users.Where(u => u.IsDeleted == false)
                 .Skip((paginationModel.PageNumber - 1) * paginationModel.PageSize)
                 .Take(paginationModel.PageSize).ToListAsync();
@@ -60,9 +66,18 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
         {
             try
             {
+                var result = new MessageResult<User>();
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGetByIdInputDto.Id);
+                if(user is null)
+                {
+                    result.Message = "کاربر یافت نشد";
+                    result.Status = StatusResult.Error;
+                    result.Result = null;
 
-                var result = new MessageResult<User>
+                    return result;
+                }
+
+                result=new MessageResult<User>
                 {
                     Result = user,
                     Message = "کاربر با موفقیت فراخوانی شد",

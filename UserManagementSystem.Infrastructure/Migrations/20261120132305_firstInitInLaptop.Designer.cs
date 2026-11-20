@@ -12,8 +12,8 @@ using UserManagementSystem.Infrastructure.Data;
 namespace UserManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(UserManagementContext))]
-    [Migration("20261119082318_firstInit")]
-    partial class firstInit
+    [Migration("20261120132305_firstInitInLaptop")]
+    partial class firstInitInLaptop
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
