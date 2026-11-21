@@ -38,7 +38,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
                 var result = new MessageResult<List<User>>
                 {
                     Result = users,
-                    Message = "لیست کاربران با موفقیت فراخوانی شد",
+                    Message = users.Count > 0 ? "لیست کاربران با موفقیت فراخوانی شد" : "کاربر / کاربران یافت نشد",
                     Status = StatusResult.Success
                 };
 
@@ -68,7 +68,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
             {
                 var result = new MessageResult<User>();
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGetByIdInputDto.Id);
-                if(user is null)
+                if (user is null)
                 {
                     result.Message = "کاربر یافت نشد";
                     result.Status = StatusResult.Error;
@@ -77,7 +77,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
                     return result;
                 }
 
-                result=new MessageResult<User>
+                result = new MessageResult<User>
                 {
                     Result = user,
                     Message = "کاربر با موفقیت فراخوانی شد",
@@ -156,7 +156,7 @@ namespace UserManagementSystem.Infrastructure.Repositories.Users
                     return new MessageResult<bool>
                     {
                         Result = true,
-                        Message = "کاربر با موفقیت ایجاد گردید.",
+                        Message = "کاربر با موفقیت ویرایش گردید.",
                         Status = StatusResult.Success
                     };
                 }
